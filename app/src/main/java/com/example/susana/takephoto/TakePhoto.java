@@ -3,6 +3,8 @@ package com.example.susana.takephoto;
 import java.io.File;
 import java.util.List;
 
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 
 public class TakePhoto extends Activity implements OnClickListener {
 
+    private String selectedImagePath;
     Button btnTackPic;
     TextView tvHasCamera, tvHasCameraApp;
     ImageView ivThumbnailPhoto;
@@ -37,19 +40,11 @@ public class TakePhoto extends Activity implements OnClickListener {
         // Get reference to views
         btnTackPic = (Button) findViewById(R.id.btnTakePic);
         ivThumbnailPhoto = (ImageView) findViewById(R.id.ivThumbnailPhoto);
-
-
     }
 
     // on button "btnTackPic" is clicked
     @Override
     public void onClick(View view) {
-
-        // create intent with ACTION_IMAGE_CAPTURE action
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        // start camera activity
-        startActivityForResult(intent, TAKE_PICTURE);
 
     }
 
@@ -64,27 +59,40 @@ public class TakePhoto extends Activity implements OnClickListener {
 
     public void loadPic(View view)
     {
-        //This is not working yet
-       /* Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("image/*");
-        startActivityForResult(
-                Intent.createChooser(intent, "Select File", SELECT_FILE);
-        );*/
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
+        // start library activity
+        startActivityForResult(intent, SELECT_FILE);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == TAKE_PICTURE && resultCode== RESULT_OK && intent != null){
+        if (requestCode == TAKE_PICTURE && resultCode== RESULT_OK && data != null){
             // get bundle
-            Bundle extras = intent.getExtras();
+            Bundle extras = data.getExtras();
 
             // get bitmap
             bitMap = (Bitmap) extras.get("data");
             ivThumbnailPhoto.setImageBitmap(bitMap);
 
         }
+
+        if (requestCode == SELECT_FILE && resultCode == RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+
+            selectedImagePath = getPath(selectedImage);
+            System.out.println("Image Path : " + selectedImagePath);
+            ivThumbnailPhoto.setImageURI(selectedImage);
+        }
+    }
+
+    public String getPath(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
 
     // method to check if you have a Camera
