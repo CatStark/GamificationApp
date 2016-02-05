@@ -1,0 +1,38 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="top|start"
+    tools:context="com.tonikamitv.loginregister.HomePage">
+
+
+    <item
+        android:id="@+id/filter"
+        android:orderInCategory="3"
+        app:showAsAction="always"
+        android:icon="@drawable/icon_filter"
+        android:title="Refresh"/>
+
+    <item  android:id="@+id/user_profile"
+        android:title="User Profile"/>
+    <item  android:id="@+id/message"
+        android:title="Message"/>
+    <item  android:id="@+id/lang_learning"
+        android:title="Language Learning"/>
+    <item  android:id="@+id/setting"
+        android:title="Setting"/>
+    <item  android:id="@+id/imprint"
+        android:title="Imprint"/>
+    <item  android:id="@+id/logout"
+        android:title="Logout"/>
+
+    <item
+        android:id="@+id/search"
+        android:orderInCategory="2"
+        app:showAsAction="always"
+        android:icon="@drawable/icon_search"
+        android:title="Refresh"/>
+
+
+</menu>
+
+
